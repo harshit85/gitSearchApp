@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton btnFavouite;
     private SqliteHelper sqliteHelper;
-    private String reppositoryName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        String reppositoryName;
         reppositoryName =editText.getText().toString();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.github.com/search/").addConverterFactory(GsonConverterFactory.create()).build();
         APISearchRepositries searchRepositries = retrofit.create(APISearchRepositries.class);
@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 progressBar.setVisibility(View.GONE);
                 Repositry repo = response.body();
+                if(itemLayout.size()>0)
+                {
+                    itemLayout.removeAll(itemLayout);
+                }
                 for (items item : repo.getItems()) {
                     itemLayout.add(new ItemLayout(item.getId(), item.getFull_name(), item.getDescription(), item.getLanguage()));
                 }
@@ -100,21 +104,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFavourite() {
-      /*  sqliteHelper = new SqliteHelper(this);
-        Cursor res = sqliteHelper.showFavourite();
-        if (res.getCount() == 0) {
-            showDialogMessage("Empty", "Nothing is into the table");
-            return;
-        }
-        StringBuffer buffer = new StringBuffer();
-        while (res.moveToNext()) {
-            buffer.append("ID: " + res.getString(0) + "\n");
-            buffer.append("directoryName: " + res.getString(1) + "\n");
-            buffer.append("language: " + res.getString(2) + "\n");
-            buffer.append("description: " + res.getString(3) + "\n\n");
-        }
-        showDialogMessage("Data", buffer.toString());*/
-
         Intent intent = new Intent(MainActivity.this,Main2Activity.class);
         startActivity(intent);
     }
